@@ -7,10 +7,11 @@ import NavBar from "../components/Header.jsx";
 import View from "./Vista-filter.jsx";
 import { IonIcon } from '@ionic/react';
 
-const Producto = () => {
-  const { filterProducts } = useFilters();
 
-  const filteredProducts = filterProducts(products);
+const Producto = () => {
+  // const { filterProducts } = useFilters();
+
+  // const filteredProducts = filterProducts(products);
 
   return (
     < div className="View-Product" >
@@ -21,7 +22,7 @@ const Producto = () => {
           </div>
           <div className="col-lg-9">
             <CartProvider>
-              <Products products={filteredProducts} />
+              <Products />
             </CartProvider>
           </div>
         </div>

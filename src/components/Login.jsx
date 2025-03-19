@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -11,7 +11,11 @@ import {
   Typography,
 } from "@mui/material";
 import { Email, Lock, Visibility, VisibilityOff } from "@mui/icons-material";
-import logo from "../assets/LogoFashionCode.jpg";
+import logo from "../assets/LogoFashionCode.png";
+import { FcGoogle } from "react-icons/fc";
+import { useNavigate } from "react-router-dom";
+import api from '../api.jsx';
+
 
 const CustomTextField = styled(TextField)(({ theme }) => ({
   "& .MuiOutlinedInput-root": {
@@ -40,9 +44,14 @@ const SignUpForm = () => {
   const label = { inputProps: { "aria-label": "Switch demo" } };
   const [showPassword, setShowPassword] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
+  const [showPasswordConfirm, setshowPasswordConfirm] = useState(false);
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
-  const [isSignUp, setIsSignUp] = useState(false); // Form durumunu yönetmek için state
+  const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [email, setEmail] = useState("");
+  const [email2, setEmail2] = useState("");
+  const [isSignUp, setIsSignUp] = useState(false);
+  const navigate = useNavigate();
 
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
@@ -50,6 +59,10 @@ const SignUpForm = () => {
 
   const handleClickShowPassword2 = () => {
     setShowPassword2(!showPassword2);
+  };
+
+  const handleClickShowPasswordConfirm = () => {
+    setshowPasswordConfirm(!showPasswordConfirm);
   };
 
   const handleMouseDownPassword = (event) => {
@@ -68,231 +81,157 @@ const SignUpForm = () => {
     setPassword2(event.target.value);
   };
 
+  const handlePasswordConfirm = (event) => {
+    setPasswordConfirm(event.target.value);
+  };
+
+  const handleEmailChange = (event) => {
+    setEmail(event.target.value);
+  };
+
+  const handleEmailChange2 = (event) => {
+    setEmail2(event.target.value);
+  };
+
   const handleFormToggle = () => {
-    setIsSignUp(!isSignUp); // Formlar arasında geçiş yap
+    setIsSignUp(!isSignUp);
+  };
+
+  const handleSignIn = async (e) => {
+    e.preventDefault();
+
+    const userData = {
+      email: email,
+      password: password
+    };
+
+    try {
+      const response = await api.post("/login/signin", userData);
+
+      if (response.status === 200) {
+        const token = response.data.token; 
+        localStorage.setItem("token", token); 
+        // console.log("✅ Sesión iniciada:", response.data);
+        alert("Inicio de sesión exitoso 🎉");
+        navigate("/");
+      }
+    } catch (error) {
+      console.error("🚨 Error en el inicio de sesión:", error.message);
+      alert("Correo o contraseña incorrectos.");
+    }
+  };
+
+  const handleSignUp = async (e) => {
+    e.preventDefault();
+
+    if (password2 !== passwordConfirm) {
+      alert("⚠️ Las contraseñas no coinciden. Inténtalo de nuevo.");
+      return;
+    }
+
+    const userData = {
+      email: email2,
+      password: password2,
+    };
+
+    try {
+      console.log("📤 Enviando datos:", userData);
+      const response = await api.post("/login", userData);
+
+      if (response.status === 200) {
+        // console.log("✅ Usuario creado:", response.data);
+        setIsSignUp(false);
+        setEmail2("");
+        setPassword2("");
+        setPasswordConfirm("");
+        alert("Usuario registrado con éxito 🎉");
+      }
+    } catch (error) {
+      console.error("🚨 Error en la petición:", error.message);
+      if (error.response && error.response.status === 400) {
+        alert("El correo ya está registrado. Intenta con otro.");
+      } else {
+        alert("Email ya registrado");
+      }
+    }
   };
 
   return (
-    <div className={`flex h-screen ${isSignUp ? "sign-up" : "sign-in"}`}>
-      <div
-        className={`flex-1 flex items-center justify-center m-5 flex-col form-container transition-transform duration-500 ${
-          isSignUp ? "md:translate-x-full sm:translate-x-0" : ""
-        }`}
-      >
-        <div className="w-full ml-12 sm:ml-0 max-w-md flex gap-3 flex-col">
-          <h3 className="text-3xl">
-            hi<span className="text-orange-400">x</span>
-          </h3>
-          <p className="text-5xl">
-            {isSignUp ? "Sign up account" : "Sign in account"}
-          </p>
-          <p className="text-gray-400/90 text-lg">
-            {isSignUp
-              ? "Create your account."
-              : "Welcome back, sign in to continue."}
-          </p>
-          <div>
-            <Button
-              style={{
-                borderColor: "#9ca3af",
-                color: "white",
-                marginTop: "10px",
-              }}
-              variant="outlined"
-              className="w-3/4"
-            >
-              <p>
-                Continue with <span className="text-orange-400">Google</span>
+    <div className={`flex h-screen ${isSignUp ? "sign-up" : "sign-in"}`} style={{ backgroundColor: "rgb(55 55 55)" }}>
+      <div className={`flex-1 flex items-center justify-center m-5 flex-col form-container transition-transform duration-500 ${isSignUp ? "md:translate-x-full sm:translate-x-0" : ""}`}>
+
+        {!isSignUp && (
+          <form onSubmit={handleSignIn} className="w-full ml-12 sm:ml-0 max-w-md flex gap-3 flex-col">
+            <p className="text-5xl text-white/90 m-0">Sign in account</p>
+            <p className="text-white/90 text-lg m-0">Welcome back, sign in to continue.</p>
+            <Button variant="outlined" className="w-3/4" sx={{ borderColor: "#9ca3af", color: "white", marginTop: "10px" }}>
+              <p className="flex items-center gap-2 m-0">
+                <FcGoogle className="text-xl" /> Continue with <span className="text-orange-400">Google</span>
               </p>
             </Button>
-          </div>
-          <div>
             <Box className="flex items-center w-3/4">
               <Divider className="flex-1" sx={{ borderColor: "gray" }} />
               <Typography className="px-3 text-white">OR</Typography>
               <Divider className="flex-1" sx={{ borderColor: "gray" }} />
             </Box>
-          </div>
-          <div className="flex flex-col gap-10">
+
             <div className="flex flex-col gap-4">
-              <div className="flex flex-col gap-2">
-                <CustomTextField
-                  className="w-3/4"
-                  label="Email"
-                  size="medium"
-                  type="email"
-                  variant="outlined"
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <Email sx={{ color: "#9ca3af", fontSize: "20px" }} />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </div>
-              <div className="flex flex-col gap-2">
-                {isSignUp ? (
-                  <div className="flex flex-col gap-4">
-                    <div>
-                      <CustomTextField
-                        className="w-3/4"
-                        label="Password"
-                        size="medium"
-                        type={showPassword ? "text" : "password"}
-                        variant="outlined"
-                        value={password}
-                        onChange={handlePasswordChange}
-                        InputProps={{
-                          startAdornment: (
-                            <InputAdornment position="start">
-                              <Lock
-                                sx={{ color: "#9ca3af", fontSize: "20px" }}
-                              />
-                            </InputAdornment>
-                          ),
-                          endAdornment: password && (
-                            <InputAdornment position="end">
-                              <IconButton
-                                sx={{ color: "#9ca3af" }}
-                                aria-label="şifreyi göster/gizle"
-                                onClick={handleClickShowPassword}
-                                onMouseDown={handleMouseDownPassword}
-                              >
-                                {showPassword ? (
-                                  <VisibilityOff />
-                                ) : (
-                                  <Visibility />
-                                )}
-                              </IconButton>
-                            </InputAdornment>
-                          ),
-                        }}
-                      />
-                    </div>
-                    <div>
-                      <CustomTextField
-                        className="w-3/4"
-                        label="Password"
-                        size="medium"
-                        type={showPassword2 ? "text" : "password"}
-                        onChange={handlePasswordChange2}
-                        value={password2}
-                        variant="outlined"
-                        InputProps={{
-                          startAdornment: (
-                            <InputAdornment position="start">
-                              <Lock
-                                sx={{ color: "#9ca3af", fontSize: "20px" }}
-                              />
-                            </InputAdornment>
-                          ),
-                          endAdornment: password2 && (
-                            <InputAdornment position="end">
-                              <IconButton
-                                sx={{ color: "#9ca3af" }}
-                                aria-label="şifreyi göster/gizle"
-                                onClick={handleClickShowPassword2}
-                                onMouseDown={handleMouseDownPassword2}
-                              >
-                                {showPassword2 ? (
-                                  <VisibilityOff />
-                                ) : (
-                                  <Visibility />
-                                )}
-                              </IconButton>
-                            </InputAdornment>
-                          ),
-                        }}
-                      />
-                    </div>
-                  </div>
-                ) : (
-                  <CustomTextField
-                    className="w-3/4"
-                    label="Password"
-                    size="medium"
-                    type={showPassword2 ? "text" : "password"}
-                    variant="outlined"
-                    value={password}
-                    onChange={handlePasswordChange}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <Lock sx={{ color: "#9ca3af", fontSize: "20px" }} />
-                        </InputAdornment>
-                      ),
-                      endAdornment: password && (
-                        <InputAdornment position="end">
-                          <IconButton
-                            sx={{ color: "#9ca3af" }}
-                            aria-label="şifreyi göster/gizle"
-                            onClick={handleClickShowPassword}
-                            onMouseDown={handleMouseDownPassword}
-                          >
-                            {showPassword ? <VisibilityOff /> : <Visibility />}
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                )}
-              </div>
-              {isSignUp ? (
-                ""
-              ) : (
-                <div className="flex justify-between items-center w-3/4">
-                  <div>
-                    <Switch {...label} color="warning" />
-                    <label className="text-sm">Remember me</label>
-                  </div>
-                  <div>
-                    <p className="text-sm text-orange-400 cursor-pointer">
-                      Forgot password?
-                    </p>
-                  </div>
+              <CustomTextField label="Email O Cédula" className="w-3/4" value={email} onChange={handleEmailChange} InputProps={{ startAdornment: (<InputAdornment position="start"><Email sx={{ color: "#9ca3af", fontSize: "20px" }} /></InputAdornment>) }} />
+              <CustomTextField label="Password" className="w-3/4" type={showPassword ? "text" : "password"} value={password} onChange={handlePasswordChange} InputProps={{ startAdornment: (<InputAdornment position="start"><Lock sx={{ color: "#9ca3af", fontSize: "20px" }} /></InputAdornment>), endAdornment: password && (<InputAdornment position="end"><IconButton sx={{ color: "#9ca3af" }} onClick={handleClickShowPassword} onMouseDown={handleMouseDownPassword}>{showPassword ? <VisibilityOff /> : <Visibility />}</IconButton></InputAdornment>) }} />
+              <div className="flex justify-between items-center w-3/4">
+                <div>
+                  <Switch color="warning" />
+                  <label className="text-sm text-white/90">Remember me</label>
                 </div>
-              )}
-            </div>
-            <div className="flex flex-col gap-4">
-              <div>
-                <Button
-                  variant="contained"
-                  className="w-3/4"
-                  sx={{ backgroundColor: "orange" }}
-                >
-                  {isSignUp ? "Sign up" : "Sign in"} account
-                </Button>
+                <p className="text-sm text-orange-400 cursor-pointer m-0">Forgot password?</p>
               </div>
-              <p className="cursor-pointer" onClick={handleFormToggle}>
-                {isSignUp ? (
-                  <p>
-                    Already have an account?{" "}
-                    <span className="text-orange-400">Sign in</span>
-                  </p>
-                ) : (
-                  <p>
-                    Don&apos;t have an account?{" "}
-                    <span className="text-orange-400">Sign up</span>
-                  </p>
-                )}
-              </p>
             </div>
-          </div>
-        </div>
+            <Button variant="contained" className="w-3/4" sx={{ backgroundColor: "orange" }} type="submit">
+              Sign in
+            </Button>
+
+            <p className="cursor-pointer m-0 text-white/90" onClick={handleFormToggle}>
+              Don't have an account? <span className="text-orange-400">Sign up</span>
+            </p>
+          </form>
+        )}
+
+
+        {isSignUp && (
+          <form onSubmit={handleSignUp} className="w-full ml-12 sm:ml-0 max-w-md flex gap-3 flex-col">
+            <p className="text-5xl text-white/90 m-0">Sign up account</p>
+            <p className="text-white/90 text-lg m-0">Create your account.</p>
+            <Button variant="outlined" className="w-3/4" sx={{ borderColor: "#9ca3af", color: "white", marginTop: "10px" }}>
+              <p className="flex items-center gap-2 m-0">
+                <FcGoogle className="text-xl" /> Continue with <span className="text-orange-400">Google</span>
+              </p>
+            </Button>
+            <Box className="flex items-center w-3/4">
+              <Divider className="flex-1" sx={{ borderColor: "gray" }} />
+              <Typography className="px-3 text-white">OR</Typography>
+              <Divider className="flex-1" sx={{ borderColor: "gray" }} />
+            </Box>
+
+            <CustomTextField label="Email" className="w-3/4" value={email2} onChange={handleEmailChange2} InputProps={{ startAdornment: (<InputAdornment position="start"><Email sx={{ color: "#9ca3af", fontSize: "20px" }} /></InputAdornment>) }} />
+            <CustomTextField label="Password" className="w-3/4" type={showPassword2 ? "text" : "password"} value={password2} onChange={handlePasswordChange2} InputProps={{ startAdornment: (<InputAdornment position="start"><Lock sx={{ color: "#9ca3af", fontSize: "20px" }} /></InputAdornment>), endAdornment: password2 && (<InputAdornment position="end"><IconButton sx={{ color: "#9ca3af" }} onClick={handleClickShowPassword2} onMouseDown={handleMouseDownPassword2}>{showPassword2 ? <VisibilityOff /> : <Visibility />}</IconButton></InputAdornment>) }} />
+            <CustomTextField label="Confirm Password" className="w-3/4" type={showPasswordConfirm ? "text" : "password"} value={passwordConfirm} onChange={handlePasswordConfirm} InputProps={{ startAdornment: (<InputAdornment position="start"><Lock sx={{ color: "#9ca3af", fontSize: "20px" }} /></InputAdornment>), endAdornment: password2 && (<InputAdornment position="end"><IconButton sx={{ color: "#9ca3af" }} onClick={handleClickShowPasswordConfirm} onMouseDown={handleMouseDownPassword2}>{handleClickShowPasswordConfirm ? <VisibilityOff /> : <Visibility />}</IconButton></InputAdornment>) }} />
+
+            <Button variant="contained" className="w-3/4" sx={{ backgroundColor: "orange" }} type="submit">
+              Sign up
+            </Button>
+
+            <p className="cursor-pointer m-0 text-white/90" onClick={handleFormToggle}>
+              Already have an account? <span className="text-orange-400">Sign in</span>
+            </p>
+          </form>
+        )}
       </div>
-      <div
-        className={`hidden md:flex flex-1 items-center justify-center image-container transition-transform duration-500 ${
-          isSignUp ? "-translate-x-full" : ""
-        }`}
-      >
-        <img
-          className="md:h-96 md:w-96 lg:h-3/4 lg:w-3/4"
-          src={logo}
-          alt=""
-        />
+
+      <div className={`hidden md:flex flex-1 items-center justify-center image-container transition-transform duration-500 ${isSignUp ? "-translate-x-full" : ""}`}>
+        <img className="md:h-96 md:w-96 lg:h-3/4 lg:w-3/4" src={logo} alt="Logo" />
       </div>
     </div>
+
   );
 };
 

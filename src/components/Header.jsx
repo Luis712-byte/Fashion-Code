@@ -15,8 +15,9 @@ import { IonIcon } from '@ionic/react';
 import { MdOutlineShoppingCart } from "react-icons/md";
 import { FaRegUser } from "react-icons/fa";
 import { FaRegHeart } from "react-icons/fa";
+import { FaUserCircle } from "react-icons/fa";
 import LoginForm from "./Login";
-import logo from '../assets/LogoFashionCode.jpg'
+import logo from '../assets/LogoFashionCode.png'
 import banner1 from '../assets/electronics-banner-1.jpg'
 import banner2 from '../assets/electronics-banner-2.jpg'
 import Men from '../assets/mens-banner.jpg'
@@ -40,28 +41,39 @@ export function NavBar({ usuario }) {
     navigate("/Carrito");
   };
 
+  // useEffect(() => {
+  //   const loggedInUserEmail = localStorage.getItem("UserEmail");
+  //   if (loggedInUserEmail) {
+  //     const userDataList = JSON.parse(localStorage.getItem("userDataList")) || [];
+  //     const loggedInUser = userDataList.find(
+  //       (user) => user.email === loggedInUserEmail
+  //     );
+  //     if (loggedInUser) {
+  //       setUser(loggedInUser);
+  //     } else {
+  //       localStorage.removeItem("UserEmail");
+  //     }
+  //   }
+  // }, []);
+
   useEffect(() => {
-    const loggedInUserEmail = localStorage.getItem("loggedInUserEmail");
-    if (loggedInUserEmail) {
-      const userDataList =
-        JSON.parse(localStorage.getItem("userDataList")) || [];
-      const loggedInUser = userDataList.find(
-        (user) => user.email === loggedInUserEmail
-      );
-      if (loggedInUser) {
-        setUser(loggedInUser);
-      } else {
-        localStorage.removeItem("loggedInUserEmail");
-      }
+    const loggedInUser = localStorage.getItem("UserEmail");
+    const Token = localStorage.getItem("accessToken");
+    if (loggedInUser && Token) {
+      setUser(loggedInUser);
+    } else {
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("UserEmail");
     }
-  }, []);
+  });
 
   const handleLogout = () => {
-    localStorage.removeItem("loggedInUserEmail");
+    localStorage.removeItem("UserEmail");
     setUser(null);
     navigate("/");
     console.log("Se fue");
   };
+
   const handleAccount = () => {
     navigate("/Account");
   };
@@ -124,7 +136,16 @@ export function NavBar({ usuario }) {
           </div>
           <div className="header-user-actions">
             <button className="action-btn">
-              <FaRegUser onClick={handleLogin} />
+              {user ? (
+                <img
+                  src={user.profileImage || "ruta-a-imagen-por-defecto.jpg"}
+                  alt="Perfil"
+                  className="profile-image"
+                  onClick={handleAccount}
+                />
+              ) : (
+                <FaRegUser onClick={handleLogin} />
+              )}
             </button>
             <button className="action-btn">
               <FaRegHeart />
@@ -332,8 +353,16 @@ export function NavBar({ usuario }) {
           <IonIcon name="menu-outline"></IonIcon>
         </button>
         <button className="action-btn">
-          <FaRegUser />
-          {/* <span className="count">0</span> */}
+          {user ? (
+            <img
+              src={user.profileImage || "ruta-a-imagen-por-defecto.jpg"}
+              alt="Perfil"
+              className="profile-image"
+              onClick={handleAccount}
+            />
+          ) : (
+            <FaRegUser onClick={handleLogin} />
+          )}
         </button>
         <button className="action-btn">
           <IonIcon name="home-outline"></IonIcon>

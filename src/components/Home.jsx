@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import { IonIcon } from '@ionic/react';
 import { NavBar } from './Header.jsx';
 // import { Cart } from './Cart.jsx';
@@ -11,10 +11,6 @@ import SliderComponent from '../style/Slider.jsx';
 import { Container, Typography, Grid, Button, Box, Paper } from '@mui/material';
 
 const Home = () => {
-  const h1Style = {
-    textAlign: 'center',
-  };
-
   return (
     <div className="Home">
       <NavBar />
