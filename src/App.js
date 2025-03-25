@@ -1,13 +1,12 @@
 import React from "react";
 import Home from "./components/Home";
 import Login from "./components/Login";
-import Contacto from "./components/Contacto";
-import Panel from "./components/Panel";
+import Panel from "./style/Panel";
 import Carrito from "./components/Carrito";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import PaymentGateway from "./style/PaymentGateway";
-import Pay from "./components/Pay";
-import Account from "./components/Account.jsx";
+import Pay from "./Formularios/Pay";
+import Account from "./components/Account";
 import ProductDetail from "./components/Productdetail.jsx";
 import { CartProvider } from "./context/cart.jsx";
 import './tailwind-output.css';
@@ -18,7 +17,6 @@ function App() {
       <Routes>
         <Route path="*" element={<Home />} />
         <Route path="/Login" element={<Login />} />
-        {/* <Route path="/Contacto" element={<Contacto />} /> */}
         <Route path="/Panel" element={<Panel />} />
         <Route path="/Carrito" element={<Carrito />} />
         <Route path="/Pago" element={<PaymentGateway />} />

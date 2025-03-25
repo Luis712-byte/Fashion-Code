@@ -1,5 +1,4 @@
 import React from "react";
-import { Filters } from "../components/Filters";
 import { IonIcon } from '@ionic/react';
 import dressIcon from "../assets/dress.svg";
 import shoesIcon from "../assets/shoes.svg";

@@ -9,10 +9,10 @@ export function Products() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log("📤 Enviando petición...");
+        // console.log("📤 Enviando petición...");
         const response = await api.get("/productos");
         if (response.status === 200) {
-          console.log("✅ API Respondió:", response.data);
+          // console.log("✅ API Respondió:", response.data);
           setProducts(response.data);
         } else {
           console.error("⚠️ Respuesta inesperada:", response);

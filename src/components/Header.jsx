@@ -10,13 +10,11 @@ import {
   faPinterest,
 } from "@fortawesome/free-brands-svg-icons";
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
-// import { faUser, faHeart } from "@fortawesome/free-regular-svg-icons";
 import { IonIcon } from '@ionic/react';
 import { MdOutlineShoppingCart } from "react-icons/md";
-import { FaRegUser } from "react-icons/fa";
+import { FaRegUser, FaSearchengin } from "react-icons/fa";
 import { FaRegHeart } from "react-icons/fa";
 import { FaUserCircle } from "react-icons/fa";
-import LoginForm from "./Login";
 import logo from '../assets/LogoFashionCode.png'
 import banner1 from '../assets/electronics-banner-1.jpg'
 import banner2 from '../assets/electronics-banner-2.jpg'
@@ -41,37 +39,19 @@ export function NavBar({ usuario }) {
     navigate("/Carrito");
   };
 
-  // useEffect(() => {
-  //   const loggedInUserEmail = localStorage.getItem("UserEmail");
-  //   if (loggedInUserEmail) {
-  //     const userDataList = JSON.parse(localStorage.getItem("userDataList")) || [];
-  //     const loggedInUser = userDataList.find(
-  //       (user) => user.email === loggedInUserEmail
-  //     );
-  //     if (loggedInUser) {
-  //       setUser(loggedInUser);
-  //     } else {
-  //       localStorage.removeItem("UserEmail");
-  //     }
-  //   }
-  // }, []);
-
   useEffect(() => {
-    const loggedInUser = localStorage.getItem("UserEmail");
     const Token = localStorage.getItem("accessToken");
-    if (loggedInUser && Token) {
-      setUser(loggedInUser);
+    if (Token) {
+      setUser(Token);
     } else {
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("UserEmail");
+      handleLogout();
     }
   });
 
   const handleLogout = () => {
-    localStorage.removeItem("UserEmail");
+    localStorage.removeItem("accessToken");
     setUser(null);
     navigate("/");
-    console.log("Se fue");
   };
 
   const handleAccount = () => {

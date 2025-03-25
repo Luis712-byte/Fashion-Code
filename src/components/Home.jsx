@@ -1,13 +1,12 @@
 import React from "react";
 import { IonIcon } from '@ionic/react';
 import { NavBar } from './Header.jsx';
-// import { Cart } from './Cart.jsx';
-// import Card from '../style/Cartas-home.jsx';
 import { Footer } from './Footer.jsx';
-import Panel from "./Panel.jsx";
-import Testimonial from "./Testimonial.jsx";
+import Panel from "../style/Panel.jsx";
+import Testimonial from "../style/Testimonial.jsx";
 import Producto from '../style/Vista-Producto.jsx';
 import SliderComponent from '../style/Slider.jsx';
+
 import { Container, Typography, Grid, Button, Box, Paper } from '@mui/material';
 
 const Home = () => {
@@ -15,7 +14,7 @@ const Home = () => {
     <div className="Home">
       <NavBar />
       <div className="Home-Content">
-        <Container>
+        <Container >
           <SliderComponent />
           <Panel />
           <Producto />
@@ -79,6 +78,7 @@ const Home = () => {
           </p>
         </div>
       </div> */}
+      
       <Footer />
     </div>
   );

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Form, Button, Container, Col } from "react-bootstrap";
-import { CartIcon } from "./Icons";
+import { CartIcon } from "../components/Icons";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 

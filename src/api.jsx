@@ -15,7 +15,7 @@ const api = axios.create({
   
 api.interceptors.response.use(
   (response) => {
-    console.log("Interceptado Response:", response);
+    // console.log("Interceptado Response:", response);
     return response;
   },
   (error) => {

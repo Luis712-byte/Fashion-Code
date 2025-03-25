@@ -1,17 +1,12 @@
 import { React } from "react";
 import { NavBar } from "./Header.jsx";
-import { CartProvider }  from "../context/cart.jsx";
-import { Cart } from './Cart.jsx'
 
 
 
-const CarroCompras  = () => {
-    return(
+const CarroCompras = () => {
+    return (
         <div className="CarroCompras">
-            <NavBar/>
-            <CartProvider>
-            <Cart/>
-            </CartProvider>
+            <NavBar />
         </div>
     );
 };

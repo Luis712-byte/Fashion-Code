@@ -1,255 +1,100 @@
-import React, { useState, useEffect } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faEdit,
-  faTrash,
-  faUserPen,
-  faUser,
-  faShop,
-} from "@fortawesome/free-solid-svg-icons";
-import NavBar from "./Header";
-import { useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
+import React, { useState } from "react";
+import { FaUserCircle, FaPlusCircle, FaCog, FaBars } from "react-icons/fa";
+import UserProfile from "../Formularios/UserProfile";
+import ProductForm from "../Formularios/ProductForm";
+
+const Settings = () => (
+    <div className="p-4 bg-white rounded-xl shadow-md">
+        <h3 className="text-xl font-bold mb-4">Configuración</h3>
+        <p className="text-gray-600">Aquí se mostrarán las opciones de configuración de la cuenta.</p>
+    </div>
+);
 
 const Account = () => {
-  const [showIcon, setShowIcon] = useState(false);
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [imageURL, setImageURL] = useState(null);
-  const [userData, setUserData] = useState({
-    name: "",
-    dirrecion: "",
-    edad: "",
-    apellido: "",
-    email: "",
-    codigoPostal: "",
-  });
+    const [activeTab, setActiveTab] = useState("Profile");
+    const [isSidebarOpen, setSidebarOpen] = useState(false);
 
-  const navigate = useNavigate();
-
-  const handleMouseEnter = () => {
-    //setShowIcon(true);
-  };
-
-  const handleMouseLeave = () => {
-    setShowIcon(false);
-  };
-
-  useEffect(() => {
-    const Datos = localStorage.getItem("userDataList");
-    if (Datos) {
-      const userDataFromStorage = JSON.parse(Datos)[0];
-      setUserData(userDataFromStorage);
-    }
-  }, []);
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    if (!e.target.readOnly) {
-      setUserData((prevUserData) => ({
-        ...prevUserData,
-        [name]: value,
-      }));
-    }
-  };
-
-  const guardarCambios = () => {
-    const { dirrecion, apellido, edad, codigoPostal } = userData;
-    if (
-      dirrecion &&
-      apellido &&
-      edad &&
-      codigoPostal &&
-      dirrecion.trim() !== "" &&
-      apellido.trim() !== "" &&
-      edad.trim() !== "" &&
-      codigoPostal.trim() !== ""
-    ) {
-      localStorage.setItem("userDataList", JSON.stringify([userData]));
-      Swal.fire({
-        title: "¡Tus cambios han sido guardados!",
-        icon: "success",
-        confirmButtonText: "Ok",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          navigate("/");
+    const renderContent = () => {
+        switch (activeTab) {
+            case "Profile":
+                return <UserProfile />;
+            case "Agregar Producto":
+                return <ProductForm />;
+            case "settings":
+                return <Settings />;
+            default:
+                return <UserProfile />;
         }
-      });
-    } else {
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "Por favor, completa todos los campos antes de guardar los cambios.",
-      });
-    }
-  };
+    };
 
-  function Eliminar() {
-    Swal.fire({
-      title: "Do you want to save the changes?",
-      showDenyButton: true,
-      showCancelButton: true,
-      confirmButtonText: "Delete",
-      denyButtonText: `Don't Delete`,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        localStorage.removeItem("userDataList");
-        setUserData({
-          name: "",
-          email: "",
-          password: "",
-        });
-        Swal.fire({
-          title: "¡Tu cuenta ha sido eliminada!",
-          icon: "success",
-          confirmButtonText: "Ok",
-        }).then((result) => {
-          if (result.isConfirmed) {
-            navigate("/");
-          }
-        });
-      } else if (result.isDenied) {
-        navigate("/Account");
-      }
-    });
-  }
+    const tabs = [
+        { key: "Profile", label: "Profile", icon: <FaUserCircle className="text-xl" /> },
+        { key: "Agregar Producto", label: "Agregar Producto", icon: <FaPlusCircle className="text-xl" /> },
+        { key: "settings", label: "Configuración", icon: <FaCog className="text-xl" /> },
+    ];
 
-  let Perfil = () => {
-    navigate("/Account");
-  };
-
-  return (
-    <>
-      <NavBar />
-      <div className="container">
-        <div className="row">
-          <div className="col-md-3 d-none d-md-block">
-            <div className="user-links">
-              <ul className="EliminarCuenta">
-                <h2>Mi cuenta</h2>
-                <hr></hr>
-                <li>
-                  <FontAwesomeIcon icon={faUser} />
-                  <span onClick={Perfil}>Mi Perfil</span>
-                </li>
-                <li>
-                  <FontAwesomeIcon icon={faTrash} />
-                  <span onClick={Eliminar} href="#">
-                    Eliminar Cuenta
-                  </span>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div className="col-md-8">
-            <div className="user-info-container">
-              <div className="user-avatar" style={{ position: "relative" }}>
-                <img
-                  src="https://th.bing.com/th/id/R.baab394b13d90b82e910fe7daffe91d6?rik=j%2fgpEnKUbHUF4Q&riu=http%3a%2f%2fcdn.playbuzz.com%2fcdn%2f913253cd-5a02-4bf2-83e1-18ff2cc7340f%2fc56157d5-5d8e-4826-89f9-361412275c35.jpg&ehk=%2fLjgOG%2bOBkDVenK3gytA6rK4ZjpCTRXBnFQiOOjVHgc%3d&risl=&pid=ImgRaw&r=0"
-                  alt="foto"
-                  className={`img-fluid rounded-circle ${
-                    showIcon ? "opaque" : ""
-                  }`}
-                  onMouseEnter={handleMouseEnter}
-                  onMouseLeave={handleMouseLeave}
-                />
-                {showIcon && (
-                  <div
-                    style={{
-                      position: "absolute",
-                      top: "50%",
-                      left: "50%",
-                      transform: "translate(-50%, -50%)",
-                    }}
-                  >
-                    <FontAwesomeIcon icon={faEdit} />
-                  </div>
-                )}
-              </div>
-              <div className="user-details-container">
-                <div className="user-details-column">
-                  <div className="user-details">
-                    <p>
-                      <span>Nombre: </span>
-                      <input
-                        type="text"
-                        name="name"
-                        value={userData.name}
-                        readOnly
-                        onChange={handleInputChange}
-                      />
-                    </p>
-                    <p>
-                      <span>Email: </span>
-                      <input
-                        type="email"
-                        name="email"
-                        value={userData.email}
-                        readOnly
-                        onChange={handleInputChange}
-                      />
-                    </p>
-                    <p>
-                      <span>Dirrecion: </span>
-                      <input
-                        type="text"
-                        name="dirrecion"
-                        value={userData.dirrecion}
-                        onChange={handleInputChange}
-                      />
-                    </p>
-                    <div className="button-group">
-                      <button
-                        className="btn btn-primary"
-                        onClick={guardarCambios}
-                      >
-                        <FontAwesomeIcon icon={faUserPen} /> Guardar Cambios
-                      </button>
+    return (
+        <div className="min-h-screen flex relative bg-gradient-to-r from-gray-100 to-gray-200">
+            <a onClick={() => setSidebarOpen(true)} className="d-md-none position-absolute top-0 start-0 btn btn-primary m-3">
+                <FaBars />
+            </a>
+            <aside className="hidden md:block w-64 bg-white border-r border-gray-200 pt-6 pr-6 pb-6 pl-0">
+                <h2 className="text-2xl font-bold mb-6 text-gray-800">BIENVENIDO</h2>
+                <ul className="space-y-2">
+                    {tabs.map((tab) => (
+                        <li
+                            key={tab.key}
+                            onClick={() => setActiveTab(tab.key)}
+                            className={`cursor-pointer px-4 py-2 rounded transition-colors duration-200 ${activeTab === tab.key
+                                ? "bg-blue-100 text-blue-600 font-medium"
+                                : "text-gray-600 hover:bg-blue-50"
+                                }`}
+                        >
+                            <div className="flex items-center space-x-2">
+                                {tab.icon}
+                                <span>{tab.label}</span>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+            </aside>
+            {isSidebarOpen && (
+                <div className="absolute inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="w-3/4 max-w-sm bg-white p-6 rounded shadow-lg">
+                        <button
+                            onClick={() => setSidebarOpen(false)}
+                            className="mb-4 text-blue-600 font-bold"
+                        >
+                            Cerrar
+                        </button>
+                        <ul className="space-y-2">
+                            {tabs.map((tab) => (
+                                <li
+                                    key={tab.key}
+                                    onClick={() => {
+                                        setActiveTab(tab.key);
+                                        setSidebarOpen(false);
+                                    }}
+                                    className={`cursor-pointer px-4 py-2 rounded transition-colors duration-200 ${activeTab === tab.key
+                                        ? "bg-blue-100 text-blue-600 font-medium"
+                                        : "text-gray-600 hover:bg-blue-50"
+                                        }`}
+                                >
+                                    <div className="flex items-center space-x-2">
+                                        {tab.icon}
+                                        <span>{tab.label}</span>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
                     </div>
-                  </div>
                 </div>
-                <div className="user-details-column">
-                  <div className="user-details">
-                    <p>
-                      <span>Apellido: </span>
-                      <input
-                        type="text"
-                        name="apellido"
-                        value={userData.apellido}
-                        onChange={handleInputChange}
-                      />
-                    </p>
-                    <p>
-                      <span>Edad: </span>
-                      <input
-                        type="number"
-                        name="edad"
-                        value={userData.edad}
-                        onChange={handleInputChange}
-                      />
-                    </p>
-                    <p>
-                      <span>C.Postal: </span>
-                      <input
-                        type="text"
-                        name="codigoPostal"
-                        value={userData.codigoPostal}
-                        onChange={handleInputChange}
-                      />
-                    </p>
-                    <div className="button-group">
-                      <button className="btn btn-danger" onClick={Eliminar}>
-                        <FontAwesomeIcon icon={faTrash} /> Borrar Cuenta
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+            )}
+            <main className={`flex-1 p-6 bg-gray-50 transition-all duration-300 ${isSidebarOpen ? "opacity-50" : "opacity-100"}`}>
+                {renderContent()}
+            </main>
         </div>
-      </div>
-    </>
-  );
+    );
 };
 
 export default Account;

@@ -15,6 +15,7 @@ import logo from "../assets/LogoFashionCode.png";
 import { FcGoogle } from "react-icons/fc";
 import { useNavigate } from "react-router-dom";
 import api from '../api.jsx';
+import Swal from 'sweetalert2';
 
 
 const CustomTextField = styled(TextField)(({ theme }) => ({
@@ -41,7 +42,6 @@ const CustomTextField = styled(TextField)(({ theme }) => ({
 }));
 
 const SignUpForm = () => {
-  const label = { inputProps: { "aria-label": "Switch demo" } };
   const [showPassword, setShowPassword] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
   const [showPasswordConfirm, setshowPasswordConfirm] = useState(false);
@@ -109,15 +109,23 @@ const SignUpForm = () => {
       const response = await api.post("/login/signin", userData);
 
       if (response.status === 200) {
-        const token = response.data.token; 
-        localStorage.setItem("token", token); 
+        const token = response.data.token;
+        localStorage.setItem("accessToken", token);
         // console.log("✅ Sesión iniciada:", response.data);
-        alert("Inicio de sesión exitoso 🎉");
+        Swal.fire({
+          icon: 'success',
+          title: 'Inicio de sesión exitoso 🎉',
+          showConfirmButton: false,
+          timer: 1500
+        });
         navigate("/");
       }
     } catch (error) {
       console.error("🚨 Error en el inicio de sesión:", error.message);
-      alert("Correo o contraseña incorrectos.");
+      Swal.fire({
+        icon: 'error',
+        title: 'Correo o contraseña incorrectos.',
+      });
     }
   };
 
@@ -125,7 +133,10 @@ const SignUpForm = () => {
     e.preventDefault();
 
     if (password2 !== passwordConfirm) {
-      alert("⚠️ Las contraseñas no coinciden. Inténtalo de nuevo.");
+      Swal.fire({
+        icon: 'warning',
+        title: '⚠️ Las contraseñas no coinciden. Inténtalo de nuevo.',
+      });
       return;
     }
 
@@ -135,7 +146,7 @@ const SignUpForm = () => {
     };
 
     try {
-      console.log("📤 Enviando datos:", userData);
+      // console.log("📤 Enviando datos:", userData);
       const response = await api.post("/login", userData);
 
       if (response.status === 200) {
@@ -144,14 +155,25 @@ const SignUpForm = () => {
         setEmail2("");
         setPassword2("");
         setPasswordConfirm("");
-        alert("Usuario registrado con éxito 🎉");
+        Swal.fire({
+          icon: 'success',
+          title: 'Usuario registrado con éxito 🎉',
+          showConfirmButton: false,
+          timer: 1500
+        });
       }
     } catch (error) {
       console.error("🚨 Error en la petición:", error.message);
       if (error.response && error.response.status === 400) {
-        alert("El correo ya está registrado. Intenta con otro.");
+        Swal.fire({
+          icon: 'error',
+          title: 'El correo ya está registrado. Intenta con otro.',
+        });
       } else {
-        alert("Email ya registrado");
+        Swal.fire({
+          icon: 'error',
+          title: 'Email ya registrado',
+        });
       }
     }
   };
