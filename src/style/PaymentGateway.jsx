@@ -1,8 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import ContactInformation from "../components/ContactInformation";
+import ContactInformation from "../Pages/ContactInformation";
 import { CartProvider } from "../context/cart";
-import { CartIcon } from "../components/Icons";
+import { CartIcon } from "../Pages/Icons";
 
 function PaymentGatewayView() {
   return (

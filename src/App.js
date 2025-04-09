@@ -1,21 +1,21 @@
 import React from "react";
-import Home from "./components/Home";
-import Login from "./components/Login";
+import { Route, Routes } from "react-router-dom";
+import './tailwind-output.css';
+import { CartProvider } from "./context/cart.jsx";
+import Home from "./Pages/Home";
+import Login from "./Pages/Login";
+import ResetPassword from "./Component/ResetPassword";
 import Panel from "./style/Panel";
-import Carrito from "./components/Carrito";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Carrito from "./Pages/Carrito";
 import PaymentGateway from "./style/PaymentGateway";
 import Pay from "./Formularios/Pay";
-import Account from "./components/Account";
-import ProductDetail from "./components/Productdetail.jsx";
-import { CartProvider } from "./context/cart.jsx";
-import './tailwind-output.css';
+import Account from "./Pages/Account";
+import ProductDetail from "./Pages/Productdetail.jsx";
 
 function App() {
   return (
     <CartProvider>
       <Routes>
-        <Route path="*" element={<Home />} />
         <Route path="/Login" element={<Login />} />
         <Route path="/Panel" element={<Panel />} />
         <Route path="/Carrito" element={<Carrito />} />
@@ -23,6 +23,8 @@ function App() {
         <Route path="/Pay" element={<Pay />} />
         <Route path="/Account" element={<Account />} />
         <Route path="/detail/:id" element={<ProductDetail />} />
+        <Route path="/reset-password/:token" element={<Home />} />
+        <Route path="*" element={<Home />} />
       </Routes>
     </CartProvider>
   );

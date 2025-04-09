@@ -1,10 +1,10 @@
 import axios from "axios";
 
-const API_URL = `https://${process.env.REACT_APP_GATEWAY}`;
+const API_URL = `http://${process.env.REACT_APP_GATEWAY}`;
 
 const api = axios.create({
   baseURL: API_URL,
-  timeout: 5000,
+  timeout: 10000,
 });
 
 // api.interceptors.request.use((config) => {

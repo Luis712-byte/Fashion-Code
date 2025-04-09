@@ -6,15 +6,13 @@ import {
   faFacebook,
   faXTwitter,
   faInstagram,
-  faSearchengin,
   faPinterest,
 } from "@fortawesome/free-brands-svg-icons";
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { IonIcon } from '@ionic/react';
 import { MdOutlineShoppingCart } from "react-icons/md";
-import { FaRegUser, FaSearchengin } from "react-icons/fa";
+import { FaRegUser } from "react-icons/fa";
 import { FaRegHeart } from "react-icons/fa";
-import { FaUserCircle } from "react-icons/fa";
 import logo from '../assets/LogoFashionCode.png'
 import banner1 from '../assets/electronics-banner-1.jpg'
 import banner2 from '../assets/electronics-banner-2.jpg'
@@ -46,7 +44,8 @@ export function NavBar({ usuario }) {
     } else {
       handleLogout();
     }
-  });
+  }, []);
+
 
   const handleLogout = () => {
     localStorage.removeItem("accessToken");

@@ -1,4 +1,5 @@
-import React from "react";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { IonIcon } from '@ionic/react';
 import { NavBar } from './Header.jsx';
 import { Footer } from './Footer.jsx';
@@ -6,10 +7,23 @@ import Panel from "../style/Panel.jsx";
 import Testimonial from "../style/Testimonial.jsx";
 import Producto from '../style/Vista-Producto.jsx';
 import SliderComponent from '../style/Slider.jsx';
+import ResetPassword from "../Component/ResetPassword";
 
 import { Container, Typography, Grid, Button, Box, Paper } from '@mui/material';
 
 const Home = () => {
+  const { token } = useParams();
+  const [showModal, setShowModal] = useState(false);
+  const [showToken, setShowToken] = useState('');
+
+  useEffect(() => {
+    if (token) {
+      setShowToken(token);
+      setShowModal(true);
+    }
+  }, [token]);
+
+
   return (
     <div className="Home">
       <NavBar />
@@ -78,8 +92,14 @@ const Home = () => {
           </p>
         </div>
       </div> */}
-      
+
       <Footer />
+
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+          <ResetPassword token={showToken} onClose={() => setShowModal(false)} />
+        </div>
+      )}
     </div>
   );
 };

@@ -16,6 +16,7 @@ import { FcGoogle } from "react-icons/fc";
 import { useNavigate } from "react-router-dom";
 import api from '../api.jsx';
 import Swal from 'sweetalert2';
+import ForgotPasswordModal from "../Component/ForgotPassword.jsx";
 
 
 const CustomTextField = styled(TextField)(({ theme }) => ({
@@ -51,6 +52,7 @@ const SignUpForm = () => {
   const [email, setEmail] = useState("");
   const [email2, setEmail2] = useState("");
   const [isSignUp, setIsSignUp] = useState(false);
+  const [openForgotModal, setOpenForgotModal] = useState(false);
   const navigate = useNavigate();
 
   const handleClickShowPassword = () => {
@@ -205,7 +207,9 @@ const SignUpForm = () => {
                   <Switch color="warning" />
                   <label className="text-sm text-white/90">Remember me</label>
                 </div>
-                <p className="text-sm text-orange-400 cursor-pointer m-0">Forgot password?</p>
+                <p className="text-sm text-orange-400 cursor-pointer m-0" onClick={() => setOpenForgotModal(true)}>
+                  Forgot password?
+                </p>
               </div>
             </div>
             <Button variant="contained" className="w-3/4" sx={{ backgroundColor: "orange" }} type="submit">
@@ -252,6 +256,7 @@ const SignUpForm = () => {
       <div className={`hidden md:flex flex-1 items-center justify-center image-container transition-transform duration-500 ${isSignUp ? "-translate-x-full" : ""}`}>
         <img className="md:h-96 md:w-96 lg:h-3/4 lg:w-3/4" src={logo} alt="Logo" />
       </div>
+      <ForgotPasswordModal open={openForgotModal} onClose={() => setOpenForgotModal(false)} onReopen={() => setOpenForgotModal(true)} />
     </div>
 
   );

@@ -12,14 +12,11 @@ import './tailwind-output.css';
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  // <React.StrictMode>
-  <FiltersProvider>
+  <React.StrictMode>
     <BrowserRouter>
       <App />
     </BrowserRouter>
-  </FiltersProvider>
-  // </React.StrictMode>
+  </React.StrictMode>
 );
 
-// Si deseas comenzar a medir el rendimiento de tu aplicación, puedes usar reportWebVitals.
 reportWebVitals();
