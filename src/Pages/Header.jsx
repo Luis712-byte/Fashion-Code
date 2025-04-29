@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
+import UserProfile from "../Formularios/UserProfile";
+
+/*Iconos*/
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faFacebook,
@@ -11,13 +15,15 @@ import {
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { IonIcon } from '@ionic/react';
 import { MdOutlineShoppingCart } from "react-icons/md";
-import { FaRegUser } from "react-icons/fa";
-import { FaRegHeart } from "react-icons/fa";
+import { FaRegUser, FaRegHeart, FaCogs, FaSignOutAlt } from "react-icons/fa";
+
+/*Imagenes*/
 import logo from '../assets/LogoFashionCode.png'
 import banner1 from '../assets/electronics-banner-1.jpg'
 import banner2 from '../assets/electronics-banner-2.jpg'
 import Men from '../assets/mens-banner.jpg'
 import women from '../assets/womens-banner.jpg'
+import Imagen_Default from "../assets/Imagen-Default.jpg";
 
 
 export function NavBar({ usuario }) {
@@ -37,10 +43,21 @@ export function NavBar({ usuario }) {
     navigate("/Carrito");
   };
 
+  const getUser = () => {
+    const cookieArr = document.cookie.split(';');
+    for (let i = 0; i < cookieArr.length; i++) {
+      const cookie = cookieArr[i].trim();
+      if (cookie.startsWith('accessEmail=')) {
+        return cookie.substring('accessEmail='.length, cookie.length);
+      }
+    }
+    return null;
+  };
+
   useEffect(() => {
-    const Token = localStorage.getItem("accessToken");
-    if (Token) {
-      setUser(Token);
+    const User = getUser();
+    if (User) {
+      setUser(User);
     } else {
       handleLogout();
     }
@@ -48,13 +65,14 @@ export function NavBar({ usuario }) {
 
 
   const handleLogout = () => {
-    localStorage.removeItem("accessToken");
+    document.cookie = "accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie = "accessEmail=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     setUser(null);
     navigate("/");
   };
 
   const handleAccount = () => {
-    navigate("/Account");
+    navigate("/UserProfile");
   };
 
   return (
@@ -114,18 +132,60 @@ export function NavBar({ usuario }) {
             </button>
           </div>
           <div className="header-user-actions">
-            <button className="action-btn">
-              {user ? (
-                <img
-                  src={user.profileImage || "ruta-a-imagen-por-defecto.jpg"}
-                  alt="Perfil"
-                  className="profile-image"
-                  onClick={handleAccount}
-                />
-              ) : (
-                <FaRegUser onClick={handleLogin} />
+            <Menu as="div" className="relative inline-block text-left">
+              <MenuButton className="action-btn">
+                {user ? (
+                  <img
+                    src={user.profileImage || Imagen_Default}
+                    alt="Perfil"
+                    className="profile-image w-10 h-10 rounded-full cursor-pointer object-cover"
+                  />
+                ) : (
+                  <FaRegUser onClick={handleLogin} />
+                )}
+              </MenuButton>
+
+              {user && (
+                <MenuItems className="absolute right-0 mt-2 w-48 origin-top-right bg-white dark:bg-gray-800 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
+                  <MenuItem>
+                    {({ state }) => (
+                      <a
+                        href="/UserProfile"
+                        className={`${state === 'active' ? 'bg-gray-100 dark:bg-gray-700' : ''
+                          } flex items-center px-4 py-2 text-sm text-black dark:text-white`}
+                      >
+                        <FaRegUser className="mr-2" />
+                        Mi Perfil
+                      </a>
+                    )}
+                  </MenuItem>
+                  <MenuItem>
+                    {({ state }) => (
+                      <a
+                        href="/ajustes"
+                        className={`${state === 'active' ? 'bg-gray-100 dark:bg-gray-700' : ''
+                          } flex items-center px-4 py-2 text-sm text-black dark:text-white`}
+                      >
+                        <FaCogs className="mr-2" />
+                        Ajustes
+                      </a>
+                    )}
+                  </MenuItem>
+                  <MenuItem>
+                    {({ state }) => (
+                      <button
+                        onClick={() => handleLogout()}
+                        className={`${state === 'active' ? 'bg-red-100 dark:bg-red-700' : ''
+                          } flex items-center w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400`}
+                      >
+                        <FaSignOutAlt className="mr-2" />
+                        Cerrar sesión
+                      </button>
+                    )}
+                  </MenuItem>
+                </MenuItems>
               )}
-            </button>
+            </Menu>
             <button className="action-btn">
               <FaRegHeart />
               <span className="count">0</span>
@@ -334,13 +394,13 @@ export function NavBar({ usuario }) {
         <button className="action-btn">
           {user ? (
             <img
-              src={user.profileImage || "ruta-a-imagen-por-defecto.jpg"}
+              src={user.profileImage || Imagen_Default}
               alt="Perfil"
               className="profile-image"
               onClick={handleAccount}
             />
           ) : (
-            <FaRegUser onClick={handleLogin} />
+            <FaRegUser className="text-2xl cursor-pointer" onClick={handleLogin} />
           )}
         </button>
         <button className="action-btn">

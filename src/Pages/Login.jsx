@@ -99,6 +99,17 @@ const SignUpForm = () => {
     setIsSignUp(!isSignUp);
   };
 
+  const setTokenCookie = (token, email) => {
+    const expirationDate = new Date(Date.now() + 2 * 60 * 60 * 1000);
+    const isSecure = window.location.protocol === "https:";
+
+    const cookieOptions = `expires=${expirationDate.toUTCString()}; path=/; SameSite=Strict${isSecure ? "; Secure" : ""}`;
+
+    document.cookie = `accessToken=${token}; ${cookieOptions}`;
+    document.cookie = `accessEmail=${email}; ${cookieOptions}`;
+  };
+
+
   const handleSignIn = async (e) => {
     e.preventDefault();
 
@@ -112,7 +123,8 @@ const SignUpForm = () => {
 
       if (response.status === 200) {
         const token = response.data.token;
-        localStorage.setItem("accessToken", token);
+        const Email = response.data.email;
+        setTokenCookie(token, Email);
         // console.log("✅ Sesión iniciada:", response.data);
         Swal.fire({
           icon: 'success',

@@ -1,6 +1,12 @@
 import axios from "axios";
 
-const API_URL = `http://${process.env.REACT_APP_GATEWAY}`;
+const isHttps = window.location.protocol === "https:";
+
+
+const API_HTTP = process.env.REACT_APP_GATEWAY_HTTP;
+const API_HTTPS = process.env.REACT_APP_GATEWAY_HTTPS;
+
+const API_URL = `${isHttps ? "https" : "http"}://${isHttps ? API_HTTPS : API_HTTP}`;
 
 const api = axios.create({
   baseURL: API_URL,
@@ -12,7 +18,7 @@ const api = axios.create({
 //     return config;
 //   });
 
-  
+
 api.interceptors.response.use(
   (response) => {
     // console.log("Interceptado Response:", response);

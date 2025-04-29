@@ -85,7 +85,7 @@ const ProductForm = () => {
         timer: 1500
       });
     } catch (error) {
-      console.error("Error al subir el producto:", error);
+      // console.error("Error al subir el producto:", error);
       Swal.fire({
         icon: 'error',
         title: 'Error al subir el producto',
@@ -96,7 +96,7 @@ const ProductForm = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-6">
-      <div className="w-full max-w-2xl bg-white shadow-2xl rounded-3xl p-8">
+      <div className="w-full bg-white shadow-2xl rounded-3xl p-8">
         <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">
           Registrar Producto
         </h2>
