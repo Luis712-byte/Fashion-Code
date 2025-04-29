@@ -99,7 +99,7 @@ const SignUpForm = () => {
     setIsSignUp(!isSignUp);
   };
 
-  const setTokenCookie = (token, email) => {
+  const setTokenCookie = (token, email, rol) => {
     const expirationDate = new Date(Date.now() + 2 * 60 * 60 * 1000);
     const isSecure = window.location.protocol === "https:";
 
@@ -107,6 +107,7 @@ const SignUpForm = () => {
 
     document.cookie = `accessToken=${token}; ${cookieOptions}`;
     document.cookie = `accessEmail=${email}; ${cookieOptions}`;
+    document.cookie = `accessRol=${rol}; ${cookieOptions}`;
   };
 
 
@@ -124,7 +125,8 @@ const SignUpForm = () => {
       if (response.status === 200) {
         const token = response.data.token;
         const Email = response.data.email;
-        setTokenCookie(token, Email);
+        const Rol = response.data.rol;
+        setTokenCookie(token, Email, Rol);
         // console.log("✅ Sesión iniciada:", response.data);
         Swal.fire({
           icon: 'success',

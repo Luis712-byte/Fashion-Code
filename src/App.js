@@ -9,6 +9,7 @@ import Carrito from "./Pages/Carrito";
 import PaymentGateway from "./style/PaymentGateway";
 import Pay from "./Formularios/Pay";
 import UserProfile from "./Formularios/UserProfile";
+import ManageProduct from "./Component/ManageProduct.jsx";
 import ProductDetail from "./Pages/Productdetail.jsx";
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
         <Route path="/Pago" element={<PaymentGateway />} />
         <Route path="/Pay" element={<Pay />} />
         <Route path="/UserProfile" element={<UserProfile />} />
+        <Route path="/ManageProduct" element={<ManageProduct />} />
         <Route path="/detail/:id" element={<ProductDetail />} />
         <Route path="/reset-password/:token" element={<Home />} />
         <Route path="*" element={<Home />} />

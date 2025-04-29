@@ -28,6 +28,7 @@ import Imagen_Default from "../assets/Imagen-Default.jpg";
 
 export function NavBar({ usuario }) {
   const [user, setUser] = useState(null);
+  const [Rol, setRol] = useState(null);
   const navigate = useNavigate();
 
   const handle = () => {
@@ -54,10 +55,23 @@ export function NavBar({ usuario }) {
     return null;
   };
 
+  const getRol = () => {
+    const cookieArr = document.cookie.split(';');
+    for (let i = 0; i < cookieArr.length; i++) {
+      const cookie = cookieArr[i].trim();
+      if (cookie.startsWith('accessRol=')) {
+        return cookie.substring('accessRol='.length, cookie.length);
+      }
+    }
+    return null;
+  };
+
   useEffect(() => {
     const User = getUser();
+    const Rol = getRol();
     if (User) {
       setUser(User);
+      setRol(Rol);
     } else {
       handleLogout();
     }
@@ -159,18 +173,19 @@ export function NavBar({ usuario }) {
                       </a>
                     )}
                   </MenuItem>
-                  <MenuItem>
-                    {({ state }) => (
-                      <a
-                        href="/ajustes"
-                        className={`${state === 'active' ? 'bg-gray-100 dark:bg-gray-700' : ''
-                          } flex items-center px-4 py-2 text-sm text-black dark:text-white`}
-                      >
-                        <FaCogs className="mr-2" />
-                        Ajustes
-                      </a>
-                    )}
-                  </MenuItem>
+                  {Rol === "ADMIN" && (
+                    <Menu.Item as="a" href="/ManageProduct">
+                      {({ active }) => (
+                        <div
+                          className={`${active ? 'bg-gray-100 dark:bg-gray-700' : ''
+                            } flex items-center px-4 py-2 text-sm text-black dark:text-white`}
+                        >
+                          <FaCogs className="mr-2" />
+                          Administrar productos
+                        </div>
+                      )}
+                    </Menu.Item>
+                  )}
                   <MenuItem>
                     {({ state }) => (
                       <button

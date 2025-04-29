@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import api from '../api.jsx';
 import Swal from 'sweetalert2';
-import { Navbar } from "react-bootstrap";
+import NavBar  from '../Pages/Header.jsx';
 
 const UserProfile = () => {
   const [dni, setDni] = useState("");
@@ -75,6 +75,8 @@ const UserProfile = () => {
   };
 
   return (
+    <>
+     <NavBar />
     <div className="min-h-screen flex items-center justify-center p-6 bg-gray-50">
       <div className="w-full bg-gradient-to-br from-white to-gray-100 shadow-2xl rounded-3xl p-6">
         <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">
@@ -120,6 +122,7 @@ const UserProfile = () => {
         </form>
       </div>
     </div>
+    </>
   );
 };
 
